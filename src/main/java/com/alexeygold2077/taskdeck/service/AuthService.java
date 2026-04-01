@@ -56,6 +56,6 @@ public class AuthService {
             return response;
         }
 
-        throw new InvalidCredentialsException("Invalid email or password");
+        throw new InvalidCredentialsException("Invalid email/username or password");
     }
 }
