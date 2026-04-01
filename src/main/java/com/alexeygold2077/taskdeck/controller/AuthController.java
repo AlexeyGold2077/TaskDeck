@@ -1,12 +1,11 @@
 package com.alexeygold2077.taskdeck.controller;
 
+import com.alexeygold2077.taskdeck.model.dto.UserLoginRequestDto;
+import com.alexeygold2077.taskdeck.model.dto.UserLoginResponseDto;
 import com.alexeygold2077.taskdeck.model.dto.UserRegisterRequestDto;
 import com.alexeygold2077.taskdeck.service.AuthService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,5 +20,10 @@ public class AuthController {
     @PostMapping("/register")
     public void register(@Valid @RequestBody UserRegisterRequestDto request) {
         authService.register(request);
+    }
+
+    @GetMapping("/login")
+    public UserLoginResponseDto register(@Valid @RequestBody UserLoginRequestDto request) {
+        return authService.login(request);
     }
 }
