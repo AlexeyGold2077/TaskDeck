@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class    AuthController {
 
     private final AuthService authService;
 
@@ -22,7 +22,7 @@ public class AuthController {
         authService.register(request);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public UserLoginResponseDto register(@Valid @RequestBody UserLoginRequestDto request) {
         return authService.login(request);
     }

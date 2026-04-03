@@ -18,10 +18,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, UserMapper userMapper) {
+    public AuthService(
+            UserRepository userRepository,
+            UserMapper userMapper,
+            JwtService jwtService
+    ) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
     }
 
     public void register(UserRegisterRequestDto request) {
@@ -42,20 +48,22 @@ public class AuthService {
         String login = request.getLogin();
         String password = request.getPassword();
 
+        User user = userRepository.findByEmail(login);
+
+        if (user == null) {
+            user = userRepository.findByUsername(login);
+        }
+
+        if (user == null || !Objects.equals(user.getPassword(), password)) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(user.getUsername());
+
         UserLoginResponseDto response = new UserLoginResponseDto();
+        response.setUser(user);
+        response.setToken(token);
 
-        User userByEmail = userRepository.findByEmail(login);
-        if (userByEmail != null && Objects.equals(userByEmail.getPassword(), password)) {
-            response.setUser(userByEmail);
-            return response;
-        }
-
-        User userByUsername = userRepository.findByUsername(login);
-        if (userByUsername != null && Objects.equals(userByUsername.getPassword(), password)) {
-            response.setUser(userByUsername);
-            return response;
-        }
-
-        throw new InvalidCredentialsException("Invalid email/username or password");
+        return response;
     }
 }
