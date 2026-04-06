@@ -1,5 +1,7 @@
 package com.alexeygold2077.taskdeck.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +17,7 @@ public class JwtService {
             "my-super-secret-key-my-super-secret-key-228-69-67-42-52".getBytes()
     );
 
-    private final long EXPIRATION = 1000 * 60 * 60; // 1 час
+    private final long EXPIRATION = 1000 * 60 * 60; // 1 hour
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -27,16 +29,30 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
+        try {
+            return parseClaims(token).getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        try {
+            Claims claims = parseClaims(token);
+            String username = claims.getSubject();
+            Date expiry = claims.getExpiration();
+            return username.equals(userDetails.getUsername())
+                    && expiry.after(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private Claims parseClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername());
+                .getPayload();
     }
 }
