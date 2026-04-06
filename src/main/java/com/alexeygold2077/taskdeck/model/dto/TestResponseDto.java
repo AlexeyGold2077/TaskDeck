@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class TestRequestDto {
+public class TestResponseDto {
     String str;
 }

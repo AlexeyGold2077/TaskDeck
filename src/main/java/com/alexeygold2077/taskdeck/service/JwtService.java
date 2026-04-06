@@ -2,6 +2,7 @@ package com.alexeygold2077.taskdeck.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -11,7 +12,7 @@ import java.util.Date;
 public class JwtService {
 
     private final SecretKey key = Keys.hmacShaKeyFor(
-            "my-super-secret-key-my-super-secret-key".getBytes()
+            "my-super-secret-key-my-super-secret-key-228-69-67-42-52".getBytes()
     );
 
     private final long EXPIRATION = 1000 * 60 * 60; // 1 час
@@ -32,5 +33,10 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername());
     }
 }

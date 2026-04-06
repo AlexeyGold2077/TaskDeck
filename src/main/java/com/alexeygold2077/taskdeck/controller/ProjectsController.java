@@ -11,9 +11,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/projects")
 public class ProjectsController {
 
-    @GetMapping("/test")
-    public String test(@RequestBody TestRequestDto dto,
-                       HttpServletRequest request) {
-        return request.getAttribute("username").toString() + dto.getPayload();
-    }
 }

@@ -1,10 +1,14 @@
 package com.alexeygold2077.taskdeck.security;
 
+import com.alexeygold2077.taskdeck.service.CustomUserDetailsService;
 import com.alexeygold2077.taskdeck.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,9 +18,14 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtFilter(JwtService jwtService) {
+    public JwtFilter(
+            JwtService jwtService,
+            CustomUserDetailsService userDetailsService
+    ) {
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -33,11 +42,20 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 String username = jwtService.extractUsername(token);
 
-                // В самой простой версии просто считаем токен валидным
-                request.setAttribute("username", username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            } catch (Exception ignored) {
-            }
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+
+            } catch (Exception ignored) {}
         }
 
         filterChain.doFilter(request, response);
