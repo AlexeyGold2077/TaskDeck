@@ -1,14 +1,33 @@
 package com.alexeygold2077.taskdeck.controller;
 
-import com.alexeygold2077.taskdeck.model.dto.TestRequestDto;
+import com.alexeygold2077.taskdeck.model.dto.*;
+import com.alexeygold2077.taskdeck.model.entity.User;
+import com.alexeygold2077.taskdeck.service.ProjectsService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/projects")
 public class ProjectsController {
 
+    private final ProjectsService projectsService;
+
+    public ProjectsController(ProjectsService projectsService) {
+        this.projectsService = projectsService;
+    }
+
+    @PostMapping("/")
+    public void createProject(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody CreateProjectRequestDto request
+    ) {
+        projectsService.createProject(user, request);
+    }
+
+    @GetMapping("/")
+    public GetAllProjectsResponseDto getAllProjects(@AuthenticationPrincipal User user) {
+        return projectsService.getAllProjects(user.getId());
+    }
 }

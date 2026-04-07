@@ -28,7 +28,7 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Integer dateCreated;
+    private Integer createdAt;
 
     @NotNull
     @Column(nullable = false)
@@ -42,15 +42,15 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Integer deadline;
+    private Integer dueDate;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User createdBy;
 
     @ManyToOne
     @JoinColumn(name = "executor_id")

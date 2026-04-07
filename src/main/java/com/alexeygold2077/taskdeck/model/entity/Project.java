@@ -12,8 +12,8 @@ import lombok.Setter;
 @Table(name = "projects")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Project {
 
     @Id
@@ -28,9 +28,15 @@ public class Project {
 
     @NotNull
     @Column(nullable = false)
-    private Integer dateCreated;
+    private Integer createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User createdBy;
+
+    public Project(String name, String description, User createdBy) {
+        this.name = name;
+        this.description = description;
+        this.createdBy = createdBy;
+    }
 }
