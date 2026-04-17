@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/projects")
 public class ProjectsController {
@@ -27,7 +29,12 @@ public class ProjectsController {
     }
 
     @GetMapping("/")
-    public GetAllProjectsResponseDto getAllProjects(@AuthenticationPrincipal User user) {
+    public List<ProjectDTO> getAllProjects(@AuthenticationPrincipal User user) {
         return projectsService.getAllProjects(user.getId());
+    }
+
+    @GetMapping("/{id}")
+    public ProjectDTO getProjectById(@PathVariable Long id) {
+        return projectsService.getProjectById(id);
     }
 }
