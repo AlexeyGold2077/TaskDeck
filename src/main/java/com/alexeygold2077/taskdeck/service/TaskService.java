@@ -2,6 +2,7 @@ package com.alexeygold2077.taskdeck.service;
 
 import com.alexeygold2077.taskdeck.model.dto.CreateTaskRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.TaskDTO;
+import com.alexeygold2077.taskdeck.model.dto.UpdateTaskStatusDto;
 import com.alexeygold2077.taskdeck.model.entity.*;
 import com.alexeygold2077.taskdeck.model.util.TaskMapper;
 import com.alexeygold2077.taskdeck.repository.ProjectRepository;
@@ -43,5 +44,15 @@ public class TaskService {
 
     public List<TaskDTO> getTasksByProject(User user, Long projectId) {
         return TaskMapper.toDTOList(taskRepository.findAllByProject_Id(projectId));
+    }
+
+    public TaskDTO updateTaskStatus(Long id, UpdateTaskStatusDto request) {
+        Task task = taskRepository.findById(id).get();
+        task.setStatus(request.getNewStatus());
+        return TaskMapper.toDTO(taskRepository.save(task));
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 }

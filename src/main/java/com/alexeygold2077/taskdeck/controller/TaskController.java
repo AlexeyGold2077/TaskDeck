@@ -2,6 +2,7 @@ package com.alexeygold2077.taskdeck.controller;
 
 import com.alexeygold2077.taskdeck.model.dto.CreateTaskRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.TaskDTO;
+import com.alexeygold2077.taskdeck.model.dto.UpdateTaskStatusDto;
 import com.alexeygold2077.taskdeck.model.entity.User;
 import com.alexeygold2077.taskdeck.service.TaskService;
 import jakarta.validation.Valid;
@@ -19,7 +20,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // Создание задачи
     @PostMapping("/projects/{projectId}/tasks")
     public void createTask(
             @AuthenticationPrincipal User user,
@@ -38,22 +38,20 @@ public class TaskController {
         return taskService.getTasksByProject(user, projectId);
     }
 
-    /*// Обновление статуса
     @PatchMapping("/tasks/{id}")
     public TaskDTO updateTaskStatus(
             @AuthenticationPrincipal User user,
             @PathVariable Long id,
             @RequestBody UpdateTaskStatusDto request
     ) {
-        return taskService.updateTaskStatus(user.getId(), id, request);
+        return taskService.updateTaskStatus(id, request);
     }
 
-    // Удаление задачи
     @DeleteMapping("/tasks/{id}")
     public void deleteTask(
             @AuthenticationPrincipal User user,
             @PathVariable Long id
     ) {
-        taskService.deleteTask(user.getId(), id);
-    }*/
+        taskService.deleteTask(id);
+    }
 }
