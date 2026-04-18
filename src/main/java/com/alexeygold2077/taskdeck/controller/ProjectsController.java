@@ -20,27 +20,27 @@ public class ProjectsController {
         this.projectsService = projectsService;
     }
 
-    @PostMapping("/")
-    public void createProject(
-            @AuthenticationPrincipal User user,
-            @Valid @RequestBody CreateProjectRequestDto request
-    ) {
+    @PostMapping
+    public void createProject(@AuthenticationPrincipal User user,
+                              @Valid @RequestBody CreateProjectRequestDto request) {
         projectsService.createProject(user, request);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<ProjectDTO> getAllProjects(@AuthenticationPrincipal User user) {
         return projectsService.getAllProjects(user.getId());
     }
 
     @GetMapping("/{id}")
-    public ProjectDTO getProjectById(@PathVariable Long id) {
+    public ProjectDTO getProjectById(@AuthenticationPrincipal User user,
+                                     @PathVariable Long id) {
         return projectsService.getProjectById(id);
     }
 
 
     @DeleteMapping("/{id}")
-    public ProjectDTO deleteProjectById(@PathVariable Long id) {
+    public ProjectDTO deleteProjectById(@AuthenticationPrincipal User user,
+                                        @PathVariable Long id) {
         return projectsService.deleteProjectById(id);
     }
 }

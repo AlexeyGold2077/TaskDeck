@@ -1,15 +1,12 @@
 package com.alexeygold2077.taskdeck.service;
 
 import com.alexeygold2077.taskdeck.model.dto.CreateProjectRequestDto;
-import com.alexeygold2077.taskdeck.model.dto.GetAllProjectsResponseDto;
-import com.alexeygold2077.taskdeck.model.dto.GetProjectByIdRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.ProjectDTO;
 import com.alexeygold2077.taskdeck.model.entity.Project;
 import com.alexeygold2077.taskdeck.model.entity.User;
 import com.alexeygold2077.taskdeck.model.util.ProjectMapper;
 import com.alexeygold2077.taskdeck.repository.ProjectRepository;
 import com.alexeygold2077.taskdeck.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
