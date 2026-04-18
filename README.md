@@ -45,8 +45,7 @@ src/main/java/com/alexeygold2077/taskdeck
 ├── mapper
 ├── model
 │   ├── dto
-│   ├── entity
-│   └── util
+│   └── entity
 ├── repository
 ├── security
 └── service
@@ -64,7 +63,7 @@ src/main/java/com/alexeygold2077/taskdeck
 - `POST /projects` creates a new project
 - `GET /projects` returns all projects of the authenticated user
 - `GET /projects/{id}` returns a project by id
-- `DELETE /projects/{id}` deletes a project by id
+- `DELETE /projects/{id}` deletes a project by id and returns `204 No Content`
 
 ### Tasks
 
@@ -138,12 +137,9 @@ Content-Type: application/json
 ```json
 {
   "name": "TaskDeck API",
-  "description": "Backend for task management",
-  "createdAt": 1715000000
+  "description": "Backend for task management"
 }
 ```
-
-Note: `createdAt` is present in the DTO, but the service currently overwrites it with the current server timestamp.
 
 ### Create Task
 
@@ -159,7 +155,7 @@ Content-Type: application/json
   "description": "Add login and token validation",
   "priority": "HIGH",
   "status": "NEW",
-  "dueDate": 1715000000
+  "dueDate": "2024-05-06T11:06:40Z"
 }
 ```
 
@@ -200,9 +196,10 @@ spring.datasource.password=postgres
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+app.jwt.secret=your-long-random-secret
 ```
 
 Start the app:
@@ -223,21 +220,17 @@ By default the API runs at `http://localhost:8080`.
 
 The repository already contains `compose.yaml`, `Dockerfile`, and `run.sh`.
 
-Build the jar first:
+Set `APP_JWT_SECRET`, then start containers:
 
 ```bash
-./mvnw clean package
-```
-
-Then start containers:
-
-```bash
+export APP_JWT_SECRET=your-long-random-secret
 docker compose up --build
 ```
 
 Default container setup:
 - app port: `8080`
 - PostgreSQL port: `5432`
+- app health endpoint: `http://localhost:8080/actuator/health`
 - database: `postgres_db`
 - username: `user`
 - password: `paswd`

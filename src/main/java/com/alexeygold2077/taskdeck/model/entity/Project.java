@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "projects")
 @Getter
@@ -28,7 +30,7 @@ public class Project {
 
     @NotNull
     @Column(nullable = false)
-    private Long createdAt;
+    private Instant createdAt;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)

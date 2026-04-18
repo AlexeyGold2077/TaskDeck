@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProjectRequestDto {
+
     @NotBlank
     @Size(max = 255)
     private String name;

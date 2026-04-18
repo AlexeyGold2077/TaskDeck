@@ -51,10 +51,11 @@ public class ProjectsController {
     }
 
     @DeleteMapping("/{id}")
-    public ProjectDTO deleteProjectById(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProjectById(
             @AuthenticationPrincipal User user,
             @PathVariable Long id
     ) {
-        return projectsService.deleteProjectById(user.getId(), id);
+        projectsService.deleteProjectById(user.getId(), id);
     }
 }

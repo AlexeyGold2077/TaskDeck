@@ -1,13 +1,13 @@
 package com.alexeygold2077.taskdeck.service;
 
 import com.alexeygold2077.taskdeck.exception.ResourceNotFoundException;
+import com.alexeygold2077.taskdeck.mapper.TaskMapper;
 import com.alexeygold2077.taskdeck.model.dto.CreateTaskRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.TaskDTO;
 import com.alexeygold2077.taskdeck.model.dto.UpdateTaskStatusDto;
 import com.alexeygold2077.taskdeck.model.entity.Project;
 import com.alexeygold2077.taskdeck.model.entity.Status;
 import com.alexeygold2077.taskdeck.model.entity.Task;
-import com.alexeygold2077.taskdeck.model.util.TaskMapper;
 import com.alexeygold2077.taskdeck.repository.ProjectRepository;
 import com.alexeygold2077.taskdeck.repository.TaskRepository;
 import com.alexeygold2077.taskdeck.repository.UserRepository;
@@ -40,7 +40,7 @@ public class TaskService {
         Task task = Task.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-                .createdAt(Instant.now().getEpochSecond())
+                .createdAt(Instant.now())
                 .status(request.getStatus() != null ? request.getStatus() : Status.NEW)
                 .priority(request.getPriority())
                 .dueDate(request.getDueDate())

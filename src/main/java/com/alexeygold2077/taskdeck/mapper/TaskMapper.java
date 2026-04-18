@@ -1,4 +1,4 @@
-package com.alexeygold2077.taskdeck.model.util;
+package com.alexeygold2077.taskdeck.mapper;
 
 import com.alexeygold2077.taskdeck.model.dto.TaskDTO;
 import com.alexeygold2077.taskdeck.model.entity.Project;

@@ -1,10 +1,10 @@
 package com.alexeygold2077.taskdeck.service;
 
 import com.alexeygold2077.taskdeck.exception.ResourceNotFoundException;
+import com.alexeygold2077.taskdeck.mapper.ProjectMapper;
 import com.alexeygold2077.taskdeck.model.dto.CreateProjectRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.ProjectDTO;
 import com.alexeygold2077.taskdeck.model.entity.Project;
-import com.alexeygold2077.taskdeck.model.util.ProjectMapper;
 import com.alexeygold2077.taskdeck.repository.ProjectRepository;
 import com.alexeygold2077.taskdeck.repository.TaskRepository;
 import com.alexeygold2077.taskdeck.repository.UserRepository;
@@ -37,7 +37,7 @@ public class ProjectsService {
                 request.getDescription(),
                 userRepository.getReferenceById(userId)
         );
-        project.setCreatedAt(Instant.now().getEpochSecond());
+        project.setCreatedAt(Instant.now());
 
         return ProjectMapper.toDTO(projectRepository.save(project));
     }
@@ -54,11 +54,10 @@ public class ProjectsService {
     }
 
     @Transactional
-    public ProjectDTO deleteProjectById(Long userId, Long id) {
+    public void deleteProjectById(Long userId, Long id) {
         Project project = projectRepository.findByIdAndCreatedBy_Id(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
         taskRepository.deleteAllByProject_IdAndProject_CreatedBy_Id(id, userId);
         projectRepository.delete(project);
-        return ProjectMapper.toDTO(project);
     }
 }

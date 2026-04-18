@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +67,7 @@ class TaskdeckApplicationTests {
                 null,
                 "Owner project",
                 "Private",
-                1_715_000_000L,
+                Instant.parse("2024-05-06T11:06:40Z"),
                 owner
         ));
 
@@ -83,7 +84,7 @@ class TaskdeckApplicationTests {
                 null,
                 "Backend",
                 "Tasks",
-                1_715_000_000L,
+                Instant.parse("2024-05-06T11:06:40Z"),
                 owner
         ));
 
@@ -91,7 +92,7 @@ class TaskdeckApplicationTests {
         request.setName("Write tests");
         request.setDescription("Cover critical flows");
         request.setPriority(Priority.HIGH);
-        request.setDueDate(1_715_000_100L);
+        request.setDueDate(Instant.parse("2024-05-06T11:08:20Z"));
 
         TaskDTO task = taskService.createTask(owner.getId(), project.getId(), request);
 

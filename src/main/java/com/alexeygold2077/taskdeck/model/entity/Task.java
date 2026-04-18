@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "tasks")
 @Getter
@@ -26,7 +28,7 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Long createdAt;
+    private Instant createdAt;
 
     @NotNull
     @Column(nullable = false)
@@ -40,7 +42,7 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Long dueDate;
+    private Instant dueDate;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)

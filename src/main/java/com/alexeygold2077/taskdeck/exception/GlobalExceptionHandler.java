@@ -9,13 +9,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.Instant;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final ApiErrorResponseFactory apiErrorResponseFactory;
+
+    public GlobalExceptionHandler(ApiErrorResponseFactory apiErrorResponseFactory) {
+        this.apiErrorResponseFactory = apiErrorResponseFactory;
+    }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>> handleAlreadyExists(
@@ -73,17 +77,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             List<String> details
     ) {
-        Map<String, Object> error = new LinkedHashMap<>();
-        error.put("timestamp", Instant.now().toString());
-        error.put("status", status.value());
-        error.put("error", status.getReasonPhrase());
-        error.put("message", message);
-        error.put("path", request.getRequestURI());
-
-        if (details != null && !details.isEmpty()) {
-            error.put("details", details);
-        }
-
-        return ResponseEntity.status(status).body(error);
+        return ResponseEntity.status(status)
+                .body(apiErrorResponseFactory.buildError(status, message, request.getRequestURI(), details));
     }
 }

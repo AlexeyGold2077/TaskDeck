@@ -9,16 +9,13 @@ import com.alexeygold2077.taskdeck.model.dto.UserRegisterRequestDto;
 import com.alexeygold2077.taskdeck.model.entity.Role;
 import com.alexeygold2077.taskdeck.model.entity.User;
 import com.alexeygold2077.taskdeck.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 public class AuthService {
@@ -56,7 +53,11 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
 
-        userRepository.save(user);
+        try {
+            userRepository.saveAndFlush(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResourceAlreadyExistsException("User with same email or username already exists");
+        }
     }
 
     public UserLoginResponseDto login(UserLoginRequestDto request) {

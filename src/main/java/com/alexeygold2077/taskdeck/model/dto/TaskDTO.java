@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,8 +17,8 @@ public class TaskDTO {
     private String name;
     private String description;
 
-    private Long createdAt;
-    private Long dueDate;
+    private Instant createdAt;
+    private Instant dueDate;
 
     private Status status;
     private Priority priority;

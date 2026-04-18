@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ public class ProjectDTO {
     private Long id;
     private String name;
     private String description;
-    private Long createdAt;
+    private Instant createdAt;
 
     private Long creatorId;
 }
