@@ -23,7 +23,11 @@ public class ProjectMapper {
     }
 
     public static List<ProjectDTO> toDTOList(List<Project> projects) {
-        List<ProjectDTO> dtoList = new ArrayList<>();
+        if (projects == null) {
+            return List.of();
+        }
+
+        List<ProjectDTO> dtoList = new ArrayList<>(projects.size());
 
         for (Project project : projects) {
             dtoList.add(toDTO(project));

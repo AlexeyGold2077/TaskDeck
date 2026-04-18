@@ -11,7 +11,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: paswd
-      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      APP_JWT_SECRET: taskdeck-compose-secret-key-taskdeck-compose-secret-key-123456
 
   db:
     image: postgres:latest

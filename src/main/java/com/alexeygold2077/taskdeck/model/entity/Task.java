@@ -26,7 +26,7 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Integer createdAt;
+    private Long createdAt;
 
     @NotNull
     @Column(nullable = false)
@@ -40,7 +40,7 @@ public class Task {
 
     @NotNull
     @Column(nullable = false)
-    private Integer dueDate;
+    private Long dueDate;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)

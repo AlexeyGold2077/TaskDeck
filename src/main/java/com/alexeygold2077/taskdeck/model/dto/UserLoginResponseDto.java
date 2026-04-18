@@ -1,6 +1,5 @@
 package com.alexeygold2077.taskdeck.model.dto;
 
-import com.alexeygold2077.taskdeck.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

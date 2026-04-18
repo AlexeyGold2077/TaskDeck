@@ -28,7 +28,7 @@ public class Project {
 
     @NotNull
     @Column(nullable = false)
-    private Integer createdAt;
+    private Long createdAt;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)

@@ -4,17 +4,19 @@ import com.alexeygold2077.taskdeck.model.entity.Priority;
 import com.alexeygold2077.taskdeck.model.entity.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 @Data
-@Getter
 public class CreateTaskRequestDto {
 
     @NotBlank
+    @Size(max = 255)
     private String name;
 
+    @Size(max = 4000)
     private String description;
 
     @NotNull
@@ -23,5 +25,6 @@ public class CreateTaskRequestDto {
     private Status status;
 
     @NotNull
-    private Integer dueDate;
+    @Positive
+    private Long dueDate;
 }

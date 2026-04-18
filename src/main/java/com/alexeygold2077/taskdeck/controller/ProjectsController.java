@@ -1,12 +1,20 @@
 package com.alexeygold2077.taskdeck.controller;
 
-import com.alexeygold2077.taskdeck.model.dto.*;
+import com.alexeygold2077.taskdeck.model.dto.CreateProjectRequestDto;
+import com.alexeygold2077.taskdeck.model.dto.ProjectDTO;
 import com.alexeygold2077.taskdeck.model.entity.User;
 import com.alexeygold2077.taskdeck.service.ProjectsService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,9 +29,12 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public void createProject(@AuthenticationPrincipal User user,
-                              @Valid @RequestBody CreateProjectRequestDto request) {
-        projectsService.createProject(user, request);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProjectDTO createProject(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody CreateProjectRequestDto request
+    ) {
+        return projectsService.createProject(user.getId(), request);
     }
 
     @GetMapping
@@ -32,15 +43,18 @@ public class ProjectsController {
     }
 
     @GetMapping("/{id}")
-    public ProjectDTO getProjectById(@AuthenticationPrincipal User user,
-                                     @PathVariable Long id) {
-        return projectsService.getProjectById(id);
+    public ProjectDTO getProjectById(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long id
+    ) {
+        return projectsService.getProjectById(user.getId(), id);
     }
 
-
     @DeleteMapping("/{id}")
-    public ProjectDTO deleteProjectById(@AuthenticationPrincipal User user,
-                                        @PathVariable Long id) {
-        return projectsService.deleteProjectById(id);
+    public ProjectDTO deleteProjectById(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long id
+    ) {
+        return projectsService.deleteProjectById(user.getId(), id);
     }
 }

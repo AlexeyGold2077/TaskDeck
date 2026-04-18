@@ -1,14 +1,28 @@
 # TaskDeck
 
-TaskDeck is a Spring Boot REST API for managing projects and tasks with JWT-based authentication.
+TaskDeck is a backend pet project for managing projects and tasks. The application is built with Spring Boot and provides a REST API with JWT authentication.
 
-The project already includes:
+The project is still in progress, so the current README describes what is already implemented in the repository right now.
+
+## Current Status
+
+What already works:
 - user registration and login
-- protected endpoints with JWT
-- project creation, listing, viewing, and deletion
-- task creation, listing, status updates, and deletion
+- JWT-based protection for private endpoints
+- creating and viewing projects
+- creating tasks inside a project
+- changing task status
+- deleting projects and tasks
+- running with PostgreSQL locally or through Docker Compose
 
-## Tech Stack
+What is still incomplete or likely to change:
+- no tests yet
+- no Swagger / OpenAPI documentation
+- minimal validation for some DTOs
+- some endpoints still return very basic responses
+- overall API and data model may still evolve
+
+## Stack
 
 - Java 17
 - Spring Boot 4
@@ -19,6 +33,7 @@ The project already includes:
 - JWT (`jjwt`)
 - Lombok
 - Maven
+- Docker Compose
 
 ## Project Structure
 
@@ -37,99 +52,40 @@ src/main/java/com/alexeygold2077/taskdeck
 └── service
 ```
 
-## Features
+## API Overview
 
 ### Authentication
+
 - `POST /auth/register` registers a new user
 - `POST /auth/login` authenticates a user and returns a JWT token
 
 ### Projects
+
 - `POST /projects` creates a new project
-- `GET /projects` returns all projects for the authenticated user
-- `GET /projects/{id}` returns a single project by id
+- `GET /projects` returns all projects of the authenticated user
+- `GET /projects/{id}` returns a project by id
 - `DELETE /projects/{id}` deletes a project by id
 
 ### Tasks
+
 - `POST /projects/{projectId}/tasks` creates a task inside a project
 - `GET /projects/{projectId}/tasks` returns all tasks for a project
 - `PATCH /tasks/{id}` updates task status
 - `DELETE /tasks/{id}` deletes a task
 
-## Requirements
+## Security
 
-Before запуском убедись, что у тебя установлены:
-- Java 17+
-- Maven 3.9+
-- PostgreSQL
+- `/auth/**` is public
+- all other endpoints require a JWT token
+- token should be sent in the `Authorization` header
 
-## Configuration
-
-At the moment the application contains only a minimal `application.properties`, so database connection settings should be added locally before running the app.
-
-Current file:
-
-```properties
-spring.application.name=taskdeck
-server.port=8080
-
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-```
-
-Example configuration for local development:
-
-```properties
-spring.application.name=taskdeck
-server.port=8080
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/taskdeck
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.datasource.driver-class-name=org.postgresql.Driver
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-```
-
-## Run Locally
-
-1. Create a PostgreSQL database, for example `taskdeck`.
-2. Add datasource settings to `src/main/resources/application.properties`.
-3. Start the application:
-
-```bash
-./mvnw spring-boot:run
-```
-
-If Maven Wrapper is unavailable in your environment, use:
-
-```bash
-mvn spring-boot:run
-```
-
-By default, the API runs on:
-
-```text
-http://localhost:8080
-```
-
-## Authentication Flow
-
-1. Register a user with `POST /auth/register`
-2. Log in with `POST /auth/login`
-3. Copy the JWT token from the response
-4. Pass it in the `Authorization` header for protected endpoints
-
-Example header:
+Example:
 
 ```http
 Authorization: Bearer <your-jwt-token>
 ```
 
-## API Examples
+## Request Examples
 
 ### Register
 
@@ -182,16 +138,12 @@ Content-Type: application/json
 ```json
 {
   "name": "TaskDeck API",
-  "description": "Backend for task management"
+  "description": "Backend for task management",
+  "createdAt": 1715000000
 }
 ```
 
-### Get All Projects
-
-```http
-GET /projects
-Authorization: Bearer <your-jwt-token>
-```
+Note: `createdAt` is present in the DTO, but the service currently overwrites it with the current server timestamp.
 
 ### Create Task
 
@@ -206,10 +158,14 @@ Content-Type: application/json
   "name": "Implement JWT auth",
   "description": "Add login and token validation",
   "priority": "HIGH",
-  "status": "TODO",
+  "status": "NEW",
   "dueDate": 1715000000
 }
 ```
+
+Available values:
+- `priority`: `LOW`, `MEDIUM`, `HIGH`
+- `status`: `NEW`, `IN_PROGRESS`, `DONE`
 
 ### Update Task Status
 
@@ -221,35 +177,72 @@ Content-Type: application/json
 
 ```json
 {
-  "newStatus": "IN_PROGRESS"
+  "newStatus": "DONE"
 }
 ```
 
-## Domain Notes
+## Local Run
 
-- `createdAt` and `dueDate` are currently stored as Unix timestamps in integer form
-- tasks support `priority` and `status` enums
-- all endpoints except `/auth/**` require authentication
+Requirements:
+- Java 17+
+- Maven 3.9+
+- PostgreSQL
 
-## Known Limitations
+Minimal example for `src/main/resources/application.properties`:
 
-This project is already a solid backend foundation, but there are a few things worth improving next:
-- JWT secret is hardcoded in the service and should be moved to environment variables or properties
-- some service methods use `Optional.get()` and should return proper `404` responses instead
-- access checks for user-owned resources can be strengthened
-- there are currently no automated tests in the repository
-- the repository contains macOS `.DS_Store` files that should be removed from version control
+```properties
+spring.application.name=taskdeck
+server.port=8080
 
-## Roadmap Ideas
+spring.datasource.url=jdbc:postgresql://localhost:5432/taskdeck
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.datasource.driver-class-name=org.postgresql.Driver
 
-- assign executors to tasks
-- add task editing beyond status updates
-- implement pagination and filtering
-- add Swagger / OpenAPI documentation
-- add Docker setup for app and database
-- add unit and integration tests
-- introduce refresh tokens or token revocation
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+```
 
-## Author
+Start the app:
 
-Created by Alexey Gold.
+```bash
+./mvnw spring-boot:run
+```
+
+If needed:
+
+```bash
+mvn spring-boot:run
+```
+
+By default the API runs at `http://localhost:8080`.
+
+## Run With Docker Compose
+
+The repository already contains `compose.yaml`, `Dockerfile`, and `run.sh`.
+
+Build the jar first:
+
+```bash
+./mvnw clean package
+```
+
+Then start containers:
+
+```bash
+docker compose up --build
+```
+
+Default container setup:
+- app port: `8080`
+- PostgreSQL port: `5432`
+- database: `postgres_db`
+- username: `user`
+- password: `paswd`
+
+## Notes
+
+- The project currently looks like a backend foundation rather than a finished product.
+- If you continue developing it, useful next steps would be tests, API documentation, better validation, and more consistent error handling.

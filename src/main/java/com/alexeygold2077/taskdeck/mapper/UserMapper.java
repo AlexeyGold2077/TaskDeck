@@ -1,7 +1,6 @@
 package com.alexeygold2077.taskdeck.mapper;
 
 import com.alexeygold2077.taskdeck.model.dto.UserRegisterRequestDto;
-import com.alexeygold2077.taskdeck.model.entity.Role;
 import com.alexeygold2077.taskdeck.model.entity.User;
 import org.springframework.stereotype.Component;
 

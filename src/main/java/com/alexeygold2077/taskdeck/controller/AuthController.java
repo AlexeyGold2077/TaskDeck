@@ -1,17 +1,18 @@
 package com.alexeygold2077.taskdeck.controller;
 
-import com.alexeygold2077.taskdeck.model.dto.TestRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.UserLoginRequestDto;
 import com.alexeygold2077.taskdeck.model.dto.UserLoginResponseDto;
 import com.alexeygold2077.taskdeck.model.dto.UserRegisterRequestDto;
 import com.alexeygold2077.taskdeck.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public class    AuthController {
+public class AuthController {
 
     private final AuthService authService;
 
