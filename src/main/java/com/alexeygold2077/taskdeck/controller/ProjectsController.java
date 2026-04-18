@@ -37,4 +37,10 @@ public class ProjectsController {
     public ProjectDTO getProjectById(@PathVariable Long id) {
         return projectsService.getProjectById(id);
     }
+
+
+    @DeleteMapping("/{id}")
+    public ProjectDTO deleteProjectById(@PathVariable Long id) {
+        return projectsService.deleteProjectById(id);
+    }
 }

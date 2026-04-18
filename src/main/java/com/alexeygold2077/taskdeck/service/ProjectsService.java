@@ -55,4 +55,16 @@ public class ProjectsService {
 
         return ProjectMapper.toDTO(project.get());
     }
+
+    public ProjectDTO deleteProjectById(Long id) {
+
+        Optional<Project> project = projectRepository.findById(id);
+
+        if (project.isEmpty())
+            return null;
+
+        projectRepository.deleteById(id);
+
+        return ProjectMapper.toDTO(project.get());
+    }
 }
