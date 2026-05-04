@@ -234,8 +234,3 @@ Default container setup:
 - database: `postgres_db`
 - username: `user`
 - password: `paswd`
-
-## Notes
-
-- The project currently looks like a backend foundation rather than a finished product.
-- If you continue developing it, useful next steps would be tests, API documentation, better validation, and more consistent error handling.
